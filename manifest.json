@@ -1,0 +1,31 @@
+{
+	"name": "source-editor",
+	"version": "0.1",
+	"manifest_version": 2,
+	"icons": {
+		"16": "logo.png",
+		"128": "logo.png"
+	},
+	"content_scripts" : [{
+		"matches": [
+			"http://*/*.js", "https://*/*.js",
+			"http://*/*.css", "https://*/*.css"
+		],
+		"js" : [
+			"/lib/ace.js",
+			"/src/content_scripts.js"
+		]
+	}],
+	"background" : {
+		"scripts": [
+			"/src/background.js"
+		]
+	},
+	"permissions": [
+		"tabs",
+		"webRequest",
+		"webRequestBlocking",
+		"http://*/*.js", "https://*/*.js",
+		"http://*/*.css", "https://*/*.css"
+	]
+}
