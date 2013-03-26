@@ -1,10 +1,10 @@
 {
 	"name": "source-editor",
-	"version": "0.1",
+	"version": "0.2",
 	"manifest_version": 2,
 	"icons": {
-		"16": "logo.png",
-		"128": "logo.png"
+		"16": "/img/logo.png",
+		"128": "/img/logo.png"
 	},
 	"content_scripts" : [{
 		"matches": [
@@ -16,6 +16,14 @@
 			"/src/content_scripts.js"
 		]
 	}],
+	"browser_action" : {
+		"default_icon" : {
+			"19": "/img/logo.png",
+			"38": "/img/logo.png"
+		},
+		"default_title": "source-editor",
+		"default_popup": "/html/popup.html"
+	},
 	"background" : {
 		"scripts": [
 			"/src/background.js"

@@ -1,10 +1,13 @@
-(function () {
+function isSourceView () {
 	if (document.querySelectorAll('title, meta').length) {
 		return;
 	}
 	if (document.body.querySelectorAll('*').length !== 1) {
 		return;
 	}
+	return true;
+}
+function replaceBodyElement () {
 	var div = document.createElement('div');
 	div.textContent = document.querySelector('pre').textContent;
 	div.style.position = 'absolute';
@@ -14,18 +17,37 @@
 		document.body.removeChild(document.body.firstChild);
 	}
 	document.body.appendChild(div);
+	return div;
+}
+function loadScript (url, callback) {
+	var scp = document.createElement('script');
+	scp.src = url;
+	scp.addEventListener('load', callback);
+	document.head.appendChild(scp);
+}
+(function () {
+	if (!isSourceView()) {
+		return;
+	}
+	var div = replaceBodyElement();
 
 	var editor = ace.edit(div);
 //	editor.setTheme('ace/theme/monokai');
 	var session = editor.getSession();
 //	session.setMode('ace/mode/javascript');
 	session.setUseWrapMode(true);
-
-	setInterval(function () {
-		chrome.extension.sendMessage({
-			'command' : 'saveCode',
-			'url' : location.href,
-			'code' : session.getValue()
-		});
-	}, 10000);
+	var throttle;
+	session.on('change', function (evn) {
+		if (throttle) {
+			return;
+		}
+		throttle = setTimeout(function () {
+			chrome.extension.sendMessage({
+				'command' : 'saveCode',
+				'url' : location.href,
+				'code' : session.getValue()
+			});
+			throttle = 0;
+		}, 1000)
+	});
 })()
