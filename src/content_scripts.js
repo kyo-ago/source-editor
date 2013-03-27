@@ -25,11 +25,11 @@ function loadScript (url, callback) {
 	scp.addEventListener('load', callback);
 	document.head.appendChild(scp);
 }
-(function () {
-	if (!isSourceView()) {
-		return;
-	}
+function initAce (code) {
 	var div = replaceBodyElement();
+	if (code) {
+		div.textContent = code;
+	}
 
 	var editor = ace.edit(div);
 //	editor.setTheme('ace/theme/monokai');
@@ -50,4 +50,15 @@ function loadScript (url, callback) {
 			throttle = 0;
 		}, 1000)
 	});
-})()
+}
+(function () {
+	if (!isSourceView()) {
+		return;
+	}
+	chrome.extension.sendMessage({
+		'command' : 'loadCode',
+		'url' : location.href
+	}, function (msg) {
+		initAce(msg.code);
+	});
+})();
