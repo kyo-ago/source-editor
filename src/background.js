@@ -1,7 +1,17 @@
 var response = {};
-var enableTab = {};
+chrome.storage.local.get('response', function (res) {
+	response = res;
+	if (Object.keys(response).length !== 0) {
+		addListener();
+	}
+});
+
 var messages = {
 	'saveCode' : function (msg, sender, callback) {
+		if (Object.keys(response).length === 0) {
+			removeListener();
+			addListener();
+		}
 		var scheme = msg.url.match(/\.js$/i)
 			? 'data:text/javascript,'
 			: 'data:text/css,'
@@ -16,49 +26,35 @@ var messages = {
 		callback({
 			'code' : res ? res.code : ''
 		});
+	},
+	'getSettings' : function (msg, sender, callback) {
+		chrome.storage.local.get('EditorSettings', callback);
+		return true;
 	}
-}
+};
 chrome.extension.onMessage.addListener(function (msg, sender, callback) {
 	return messages[msg.command] && messages[msg.command](msg, sender, callback);
 });
-chrome.tabs.onRemoved.addListener(function (tabId) {
-	delete enableTab[tabId];
-});
-chrome.tabs.onActivated.addListener(function(info) {
-	toggleBadgeText(enableTab[info.tabId]);
-});
-function callPopup () {
-	chrome.tabs.query({
-		'active' : true,
-		'currentWindow' : true
-	}, function (tabs) {
-		var id = tabs[0].id;
-		enableTab[id] = !enableTab[id];
-		toggleBadgeText(enableTab[id]);
-	});
+function addListener () {
+	chrome.webRequest.onBeforeRequest.addListener(beforeRequestListener, {
+		'urls' : [
+			'http://*/*.js', 'https://*/*.js',
+			'http://*/*.css', 'https://*/*.css'
+		],
+		'types' : ['script', 'stylesheet']
+	}, [
+		'blocking'
+	]);
 }
-function toggleBadgeText (enable) {
-	chrome.browserAction.setBadgeText({
-		'text' : enable ? '        ' : ''
-	});
+function removeListener () {
+	chrome.webRequest.onBeforeRequest.removeListener(beforeRequestListener);
 }
-chrome.webRequest.onBeforeRequest.addListener(function (details) {
+function beforeRequestListener (details) {
 	var res = response[details.url];
 	if (!res) {
-		return;
-	}
-	if (!enableTab[details.tabId]) {
 		return;
 	}
 	return {
 		'redirectUrl' : res.scheme + res.code
 	};
-}, {
-	'urls' : [
-		'http://*/*.js', 'https://*/*.js',
-		'http://*/*.css', 'https://*/*.css'
-	],
-	'types' : ['script', 'stylesheet']
-}, [
-	'blocking'
-]);
+}

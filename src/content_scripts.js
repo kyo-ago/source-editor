@@ -1,3 +1,26 @@
+var editor;
+if (isSourceView()) {
+	Deferred.parallel({
+		'loadCode' : sendMessage({
+			'command' : 'loadCode',
+			'url' : location.href
+		}),
+		'settings' : sendMessage({
+			'command' : 'getSettings'
+		})
+	}).next(function (params) {
+		var loadCode = params.loadCode;
+		var settings = params.settings;
+
+		var code_type = (location.href.match(/\.(\w+)$/) || []).pop();
+		var div = replaceBodyElement(loadCode.code);
+		editor = initEditor(div, code_type.toLowerCase());
+		editor.setParams(settings);
+	});
+}
+function sendMessage (param) {
+	return Deferred.connect(chrome.extension.sendMessage.bind(chrome.extension, param))();
+}
 function isSourceView () {
 	if (document.querySelectorAll('title, meta').length) {
 		return;
@@ -7,9 +30,9 @@ function isSourceView () {
 	}
 	return true;
 }
-function replaceBodyElement () {
+function replaceBodyElement (code) {
 	var div = document.createElement('div');
-	div.textContent = document.querySelector('pre').textContent;
+	div.textContent = code || document.querySelector('pre').textContent;
 	div.style.position = 'absolute';
 	div.style.top = div.style.bottom = div.style.right = div.style.left = '0';
 
@@ -19,46 +42,23 @@ function replaceBodyElement () {
 	document.body.appendChild(div);
 	return div;
 }
-function loadScript (url, callback) {
-	var scp = document.createElement('script');
-	scp.src = url;
-	scp.addEventListener('load', callback);
-	document.head.appendChild(scp);
-}
-function initAce (code) {
-	var div = replaceBodyElement();
-	if (code) {
-		div.textContent = code;
-	}
-
-	var editor = ace.edit(div);
-//	editor.setTheme('ace/theme/monokai');
-	var session = editor.getSession();
-//	session.setMode('ace/mode/javascript');
-	session.setUseWrapMode(true);
-	var throttle;
-	session.on('change', function (evn) {
-		if (throttle) {
-			return;
-		}
-		throttle = setTimeout(function () {
-			chrome.extension.sendMessage({
-				'command' : 'saveCode',
-				'url' : location.href,
-				'code' : session.getValue()
-			});
-			throttle = 0;
-		}, 1000)
+function initEditor (div, type) {
+	var editor = new Editor();
+	editor.init(ace.edit(div), type);
+	editor.onChange(function (code) {
+		chrome.extension.sendMessage({
+			'command' : 'saveCode',
+			'url' : location.href,
+			'code' : code
+		});
 	});
+	return editor;
 }
-(function () {
-	if (!isSourceView()) {
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	if (request.command !== 'changeSetting') {
 		return;
 	}
-	chrome.extension.sendMessage({
-		'command' : 'loadCode',
-		'url' : location.href
-	}, function (msg) {
-		initAce(msg.code);
-	});
-})();
+	delete request.command;
+	editor.setParams(request);
+});
+ 

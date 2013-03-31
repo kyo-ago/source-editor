@@ -1,6 +1,6 @@
 {
 	"name": "source-editor",
-	"version": "0.3",
+	"version": "0.4",
 	"manifest_version": 2,
 	"icons": {
 		"16": "/img/logo.png",
@@ -13,6 +13,8 @@
 		],
 		"js" : [
 			"/lib/ace.js",
+            "/lib/jsdeferred.js",
+			"/src/content_scripts/editor.js",
 			"/src/content_scripts.js"
 		]
 	}],
@@ -26,11 +28,13 @@
 	},
 	"background" : {
 		"scripts": [
+			"/lib/jsdeferred.js",
 			"/src/background.js"
 		]
 	},
 	"permissions": [
 		"tabs",
+		"storage",
 		"webRequest",
 		"webRequestBlocking",
 		"http://*/*.js", "https://*/*.js",

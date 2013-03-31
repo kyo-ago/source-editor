@@ -1,8 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="/css/frontend.css">
+<script src="/lib/jsdeferred.js"></script>
+<script src="/src/popup/settings.js"></script>
 <script src="/src/popup.js"></script>
 </head>
 <body>
+
+<table class="checkboxes">
+	<tr>
+		<td><input type="checkbox" id="SelectionStyle" checked="checked"></td>
+        <td><label for="SelectionStyle">Full Line Selection</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="HighlightActiveLine" checked="checked"></td>
+        <td><label for="HighlightActiveLine">Highlight Active Line</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="ShowInvisibles" checked="checked"></td>
+        <td><label for="ShowInvisibles">Show Invisibles</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="DisplayIndentGuides" checked="checked"></td>
+        <td><label for="DisplayIndentGuides">Show Indent Guides</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="HScrollBarAlwaysVisible" data-prop="renderer"></td>
+        <td><label for="HScrollBarAlwaysVisible">Persistent HScroll</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="AnimatedScroll"></td>
+        <td><label for="AnimatedScroll">Animate scrolling</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="ShowGutter" data-prop="renderer" checked="checked"></td>
+        <td><label for="ShowGutter">Show Gutter</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="ShowPrintMargin" data-prop="renderer" checked="checked"></td>
+        <td><label for="ShowPrintMargin">Show Print Margin</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="UseSoftTabs" data-prop="session" checked="checked"></td>
+        <td><label for="UseSoftTabs">Use Soft Tab</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="HighlightSelectedWord" checked="checked"></td>
+        <td><label for="HighlightSelectedWord">Highlight selected word</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="BehavioursEnabled"></td>
+        <td><label for="BehavioursEnabled">Enable Behaviours</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="FadeFoldWidgets"></td>
+        <td><label for="FadeFoldWidgets">Fade Fold Widgets</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="ElasticTabstops"></td>
+        <td><label for="ElasticTabstops">Enable Elastic Tabstops</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="TokenTooltip"></td>
+        <td><label for="TokenTooltip">Show token info</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="ReadOnly"></td>
+        <td><label for="ReadOnly">Read-only</label></td>
+	</tr>
+</table>
+
 </body>
 </html>
