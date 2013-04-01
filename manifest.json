@@ -1,6 +1,6 @@
 {
 	"name": "source-editor",
-	"version": "0.4",
+	"version": "0.5",
 	"manifest_version": 2,
 	"icons": {
 		"16": "/img/logo.png",
@@ -13,7 +13,11 @@
 		],
 		"js" : [
 			"/lib/ace.js",
-            "/lib/jsdeferred.js",
+			"/lib/ace/ext-searchbox.js",
+			"/lib/ace/mode-javascript.js",
+			"/lib/ace/mode-css.js",
+			"/lib/ace/theme-chrome.js",
+			"/lib/jsdeferred.js",
 			"/src/content_scripts/editor.js",
 			"/src/content_scripts.js"
 		]
