@@ -13,28 +13,20 @@
 		this.editor = editor;
 		this.type = type;
 		editor.focus();
+		editor.setTheme('ace/theme/chrome');
 		var session = editor.getSession();
 		session.setUseWrapMode(true);
 		session.setMode(type === 'js' ? 'ace/mode/javascript' : 'ace/mode/css');
-		session.setTheme('ace/theme/chrome');
 	};
 	prop.setKeyBinding = function (binding) {
 		//binding
 	};
 	prop.setParams = function (params) {
 		Object.keys(params).forEach(function (key) {
-			var param = params[key];
-			if (~['ElasticTabstops', 'TokenTooltip'].indexOf(key)) {
-				return;
-			}
-			var target = this.editor;
-			if (param['prop']) {
-				target = this.editor[param['prop']];
-			}
-			if (!target['set' + key]) {
-				return;
-			}
-			target['set' + key](param['value']);
+			var settings = new EditorSettings({
+				'editor' : this.editor
+			});
+			settings.set(key, params[key]);
 		}.bind(this));
 	};
 	prop.onChange = function (callback) {
@@ -49,6 +41,82 @@
 				throttle = 0;
 			}, 1000)
 		});
+	};
+
+	exports[Klass.name] = Klass;
+})(this);
+
+(function (exports) {
+	'use strict';
+
+	var Klass = function EditorSettings (param) {
+		this.editor = param.editor;
+	};
+	var prop = Klass.prototype;
+	prop.keybindings = {
+		'default' : null,
+		'vim' : 'ace/keyboard/vim',
+		'emacs' : 'ace/keyboard/emacs'
+	};
+
+	prop.set = function (key, value) {
+		if (this['setEnv' + key]) {
+			this['setEnv' + key](key, value);
+			return;
+		}
+		var target = this.editor;
+		if (param['prop']) {
+			target = this.editor[param['prop']];
+		}
+		if (!target['set' + key]) {
+			return;
+		}
+		target['set' + key](param['value']);
+	};
+	prop.setEnvElasticTabstops = function (key, value) {
+		this.editor.setOption('useElasticTabstops', value['value']);
+	};
+	prop.setEnvTokenTooltip = function (key, value) {
+		var editor = this.editor;
+		if (editor.tokenTooltip && !value['value']) {
+			editor.tokenTooltip.destroy();
+			delete editor.tokenTooltip;
+		} else if (value['value']) {
+			editor.tokenTooltip = new TokenTooltip(editor);
+		}
+	};
+	prop.setEnvWrapLimitRange = function (key, value) {
+		var session = this.editor.session;
+		var renderer = this.editor.renderer;
+		if (value['value'] === 'off') {
+			session.setUseWrapMode(false);
+			renderer.setPrintMarginColumn(80);
+			return;
+		}
+		if (value['value'] === 'free') {
+			session.setUseWrapMode(true);
+			session.setWrapLimitRange(null, null);
+			renderer.setPrintMarginColumn(80);
+			return;
+		}
+		session.setUseWrapMode(true);
+		var col = parseInt(value['value'], 10);
+		session.setWrapLimitRange(col, col);
+		renderer.setPrintMarginColumn(col);
+	};
+	prop.setEnvTabSize = function (key, value) {
+		var session = this.editor.session;
+		session.setTabSize(parseInt(value['value'], 10));
+	};
+	prop.setEnvFontSize = function (key, value) {
+		this.editor.setFontSize(parseInt(value['value'], 10));
+	};
+	prop.setEnvFoldStyle = function (key, value) {
+		this.editor.session.setFoldStyle(value['value']);
+		this.editor.setShowFoldWidgets(value['value'] !== 'manual');
+	};
+	prop.setEnvKeyboardHandler = function (key, value) {
+		this.editor.setKeyboardHandler(this.keybindings[value['value']]);
 	};
 
 	exports[Klass.name] = Klass;
@@ -69,7 +137,13 @@
 		var blob = new Blob([inner], {type:'text\/javascript'});
 		return URL.createObjectURL(blob);
 	};
-	var worker_code = {
+	/* ***** BEGIN LICENSE BLOCK *****
+	 * Distributed under the BSD license:
+	 *
+	 * Copyright (c) 2010, Ajax.org B.V.
+	 * All rights reserved.
+	*/
+	 var worker_code = {
 		'ace/mode/coffee_worker' : function () {/*
 (function(j){"undefined"!=typeof j.window&&j.document||(j.console={log:function(){var g=Array.prototype.slice.call(arguments,0);postMessage({type:"log",data:g})},error:function(){var g=Array.prototype.slice.call(arguments,0);postMessage({type:"log",data:g})}},j.window=j,j.ace=j,j.normalizeModule=function(g,f){if(-1!==f.indexOf("!")){var a=f.split("!");return normalizeModule(g,a[0])+"!"+normalizeModule(g,a[1])}if("."==f.charAt(0))for(f=g.split("/").slice(0,-1).join("/")+"/"+f;-1!==f.indexOf(".")&&
 a!=f;)a=f,f=f.replace(/\/\.\//,"/").replace(/[^\/]+\/\.\.\//,"");return f},j.require=function(g,f){if(!f.charAt)throw Error("worker.js require() accepts only (parentId, id) as arguments");f=normalizeModule(g,f);var a=require.modules[f];if(a)return a.initialized||(a.initialized=!0,a.exports=a.factory().exports),a.exports;a=f.split("/");a[0]=require.tlns[a[0]]||a[0];a=a.join("/")+".js";require.id=f;importScripts(a);return require(g,f)},require.modules={},require.tlns={},j.define=function(g,f,a){2==

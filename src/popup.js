@@ -6,7 +6,7 @@ function onChange (evn) {
 	var elem = evn.srcElement;
 	var key = elem.id;
 	var val = (elem.type === 'checkbox'
-		? elem.checked
+		? !!elem.checked
 		: elem.value
 	);
 	var dataset = elem.dataset;
@@ -27,8 +27,10 @@ Deferred.parallel({
 	'settings' : function () {
 		var defer = Deferred();
 		var checkboxes = document.querySelectorAll('.checkboxes [type="checkbox"]');
+		var selectboxes = document.querySelectorAll('.selectboxes select');
 		settings = new EditorSettings({
-			'checkboxes' : Array.apply([], checkboxes)
+			'checkboxes' : Array.apply([], checkboxes),
+			'selectboxes' : Array.apply([], selectboxes)
 		});
 		settings.init(defer.call.bind(defer, settings));
 		return defer;

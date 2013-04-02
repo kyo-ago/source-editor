@@ -8,68 +8,150 @@
 </head>
 <body>
 
-<table class="checkboxes">
-	<tr>
-		<td><input type="checkbox" id="SelectionStyle" checked="checked"></td>
-        <td><label for="SelectionStyle">Full Line Selection</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="HighlightActiveLine" checked="checked"></td>
-        <td><label for="HighlightActiveLine">Highlight Active Line</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="ShowInvisibles" checked="checked"></td>
-        <td><label for="ShowInvisibles">Show Invisibles</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="DisplayIndentGuides" checked="checked"></td>
-        <td><label for="DisplayIndentGuides">Show Indent Guides</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="HScrollBarAlwaysVisible" data-prop="renderer"></td>
-        <td><label for="HScrollBarAlwaysVisible">Persistent HScroll</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="AnimatedScroll"></td>
-        <td><label for="AnimatedScroll">Animate scrolling</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="ShowGutter" data-prop="renderer" checked="checked"></td>
-        <td><label for="ShowGutter">Show Gutter</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="ShowPrintMargin" data-prop="renderer" checked="checked"></td>
-        <td><label for="ShowPrintMargin">Show Print Margin</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="UseSoftTabs" data-prop="session" checked="checked"></td>
-        <td><label for="UseSoftTabs">Use Soft Tab</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="HighlightSelectedWord" checked="checked"></td>
-        <td><label for="HighlightSelectedWord">Highlight selected word</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="BehavioursEnabled"></td>
-        <td><label for="BehavioursEnabled">Enable Behaviours</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="FadeFoldWidgets"></td>
-        <td><label for="FadeFoldWidgets">Fade Fold Widgets</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="ElasticTabstops"></td>
-        <td><label for="ElasticTabstops">Enable Elastic Tabstops</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="TokenTooltip"></td>
-        <td><label for="TokenTooltip">Show token info</label></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" id="ReadOnly"></td>
-        <td><label for="ReadOnly">Read-only</label></td>
-	</tr>
+<div>
+    <button id="ClearCache">Clear this cache</button><br>
+    <button id="ViewSource">View base code</button>
+</div>
+
+<table class="selectboxes">
+    <tr>
+        <td>
+            <label for="TabSize">Tab Size</label>
+        </td>
+        <td>
+            <select id="TabSize">
+                <option value="2">2</option>
+                <option value="4" selected="selected">4</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+                <option value="10">10</option>
+                <option value="12">12</option>
+                <option value="14">14</option>
+                <option value="16">16</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="FontSize">Font Size</label>
+        </td>
+        <td>
+            <select id="FontSize">
+                <option value="10px">10px</option>
+                <option value="11px">11px</option>
+                <option value="12px" selected="selected">12px</option>
+                <option value="13px">13px</option>
+                <option value="14px">14px</option>
+                <option value="16px">16px</option>
+                <option value="18px">18px</option>
+                <option value="20px">20px</option>
+                <option value="24px">24px</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="FoldStyle">Code Folding</label>
+        </td>
+        <td>
+            <select id="FoldStyle">
+                <option value="manual">manual</option>
+                <option value="markbegin" selected="selected">mark begin</option>
+                <option value="markbeginend">mark begin and end</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="KeyboardHandler">Key Binding</label>
+        </td>
+        <td>
+            <select id="KeyboardHandler">
+                <option value="default">Default</option>
+                <option value="vim">Vim</option>
+                <option value="emacs">Emacs</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td><label for="WrapLimitRange">Soft Wrap</label></td>
+        <td>
+            <select id="WrapLimitRange">
+                <option value="off">Off</option>
+                <option value="40">40 Chars</option>
+                <option value="80">80 Chars</option>
+                <option value="free">Free</option>
+            </select>
+        </td>
+    </tr>
 </table>
+
+<table class="checkboxes">
+    <tr>
+        <td><input type="checkbox" id="SelectionStyle" checked="checked"></td>
+        <td><label for="SelectionStyle">Full Line Selection</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="HighlightActiveLine" checked="checked"></td>
+        <td><label for="HighlightActiveLine">Highlight Active Line</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="ShowInvisibles" checked="checked"></td>
+        <td><label for="ShowInvisibles">Show Invisibles</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="DisplayIndentGuides" checked="checked"></td>
+        <td><label for="DisplayIndentGuides">Show Indent Guides</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="HScrollBarAlwaysVisible" data-prop="renderer"></td>
+        <td><label for="HScrollBarAlwaysVisible">Persistent HScroll</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="AnimatedScroll"></td>
+        <td><label for="AnimatedScroll">Animate scrolling</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="ShowGutter" data-prop="renderer" checked="checked"></td>
+        <td><label for="ShowGutter">Show Gutter</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="ShowPrintMargin" data-prop="renderer" checked="checked"></td>
+        <td><label for="ShowPrintMargin">Show Print Margin</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="UseSoftTabs" data-prop="session" checked="checked"></td>
+        <td><label for="UseSoftTabs">Use Soft Tab</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="HighlightSelectedWord" checked="checked"></td>
+        <td><label for="HighlightSelectedWord">Highlight selected word</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="BehavioursEnabled"></td>
+        <td><label for="BehavioursEnabled">Enable Behaviours</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="FadeFoldWidgets"></td>
+        <td><label for="FadeFoldWidgets">Fade Fold Widgets</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="ElasticTabstops"></td>
+        <td><label for="ElasticTabstops">Enable Elastic Tabstops</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="TokenTooltip"></td>
+        <td><label for="TokenTooltip">Show token info</label></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="ReadOnly"></td>
+        <td><label for="ReadOnly">Read-only</label></td>
+    </tr>
+</table>
+
+<div>
+    <button id="ClearAllCache">Clear all cache</button>
+</div>
 
 </body>
 </html>
