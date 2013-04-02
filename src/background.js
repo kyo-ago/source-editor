@@ -1,10 +1,25 @@
 var response = {};
 chrome.storage.local.get('response', function (res) {
-	response = res;
+	response = (res || {})['response'] || {};
 	if (Object.keys(response).length !== 0) {
 		addListener();
 	}
 });
+function saveResponse (callback) {
+	chrome.storage.local.set({
+		'response' : response
+	}, callback);
+}
+function clearCache (url, callback) {
+	var sussess = url in response;
+	delete response[url];
+	saveResponse(callback.bind(this, sussess));
+}
+function clearAllCache (callback) {
+	var sussess = Object.keys(response).length !== 0;
+	response = {};
+	saveResponse(callback.bind(this, sussess));
+}
 
 var messages = {
 	'saveCode' : function (msg, sender, callback) {
@@ -20,6 +35,7 @@ var messages = {
 			'scheme' : scheme,
 			'code' : msg.code
 		};
+		saveResponse(function () {});
 	},
 	'loadCode' : function (msg, sender, callback) {
 		var res = response[msg.url];
@@ -28,7 +44,9 @@ var messages = {
 		});
 	},
 	'getSettings' : function (msg, sender, callback) {
-		chrome.storage.local.get('EditorSettings', callback);
+		chrome.storage.local.get('EditorSettings', function (store) {
+			callback(store['EditorSettings']);
+		});
 		return true;
 	}
 };

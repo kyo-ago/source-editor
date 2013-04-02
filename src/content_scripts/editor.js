@@ -65,13 +65,13 @@
 			return;
 		}
 		var target = this.editor;
-		if (param['prop']) {
-			target = this.editor[param['prop']];
+		if (value['prop']) {
+			target = this.editor[value['prop']];
 		}
 		if (!target['set' + key]) {
 			return;
 		}
-		target['set' + key](param['value']);
+		target['set' + key](value['value']);
 	};
 	prop.setEnvElasticTabstops = function (key, value) {
 		this.editor.setOption('useElasticTabstops', value['value']);

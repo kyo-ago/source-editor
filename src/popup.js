@@ -22,6 +22,42 @@ function onChange (evn) {
 	settings.set(key, val);
 	chrome.tabs.sendMessage(currentTab.id, message);
 }
+function createNewTab () {
+	var link = document.createElement('a');
+	link.href = 'view-source:' + location.href;
+	link.target = '_blank';
+	var evn = document.createEvent('MouseEvents');
+	evn.initEvent('click', false, true);
+	link.dispatchEvent(evn);
+}
+function onClick (evn) {
+	var elem = evn.srcElement;
+	var clear_cache = function (sussess) {
+		if (!sussess) {
+			return;
+		}
+		chrome.tabs.executeScript(currentTab.id, {
+			'code' : 'location.reload();'
+		});
+	};
+	if (elem.tagName.toLowerCase() !== 'button') {
+		return;
+	}
+	if (elem.id === 'ViewSource') {
+		chrome.tabs.executeScript(currentTab.id, {
+			'code' : '(' + createNewTab + ')()'
+		});
+		return;
+	}
+	if (elem.id === 'ClearCache') {
+		background.clearCache(currentTab.url, clear_cache);
+		return;
+	}
+	if (elem.id === 'ClearAllCache') {
+		background.clearAllCache(clear_cache);
+		return;
+	}
+}
 Deferred.parallel({
 	'background' : Deferred.connect(chrome.runtime, 'getBackgroundPage')(),
 	'settings' : function () {
@@ -45,4 +81,5 @@ Deferred.parallel({
 	currentTab = params.currentTabs[0];
 
 	document.body.addEventListener('change', onChange);
+	document.body.addEventListener('click', onClick);
 });
