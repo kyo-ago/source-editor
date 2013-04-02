@@ -46,7 +46,6 @@
 		this.selectboxes.forEach(set);
 	};
 	prop.init = function (callback) {
-		debugger;
 		chrome.storage.local.get(Klass.name, function (storage) {
 			this.storage = storage;
 			callback();
